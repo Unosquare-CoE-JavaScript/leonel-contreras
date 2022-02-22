@@ -118,3 +118,42 @@ maybe we want to wait and don´t do anything else until user response.
 - Disadvantage: It can be difficult to reason about.
 - Disadvantage: Harder to write.
 
+
+<a name='callback'></a>
+### 1.7. Callback
+
+Callbacks are the traditionally way to implement async code in JS and avoid blocking code. 
+A callback is just a simple function that is execute when something happend.
+
+#### 1.7.1. How callbacks are possible?
+
+In javascript exist objects we can define it, but also variables are object
+and maybe the most wear situation it´s that functions also are objects,
+this is very important in JS 'cause allow you to pass function to another
+functions (A function that receives another function trough param it´s called
+higher order function), and this allows you to execute a function inside another 
+function. 
+
+
+#### 1.7.2. Examples
+
+A very basic example of callbacks are events, for example listen for a click
+in some button, we attach some function to the click event, and when click happend
+we execute it.
+
+```javascript
+  button.addEventListener('click', function(event) {
+    console.log('You click the button')
+  })
+```
+
+#### 1.7.3. Problems
+
+- Callback hell: When you use a lot of nested callback it´s very complex to understand the code, and trying to solve bugs is a very hard task, (because when we use this pattern it´s very common to use anonymous functions),  when it happend the console isn´t abble to find the name of the function when the error happend and only throws and error occurs in and anonymous function :(, but which?.
+- Difficult to reason about it: Trying to understand callbacks is complex, because combine a lot of differents concepts that are not very common, specially if you come from more classical languages, things like functions are objects, you can pass it as a params, Higher order functions, async code, and also the structure itself is a little bit different.
+- Inversion of control: When you use callbacks you get a lot of power, but you need to accept that you lost the control, you don´t have any control when you will get a response, and also in some cases you don´t know if you will get a response.
+
+#### 1.7.4. Some examples
+
+[Examples](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/tree/asynchrounus-jsdeep-dive/asynchronus-javascript-deep-dive/callbacks/examples)
+
