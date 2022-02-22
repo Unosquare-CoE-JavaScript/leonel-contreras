@@ -120,7 +120,7 @@ maybe we want to wait and don´t do anything else until user response.
 
 
 <a name='callback'></a>
-### 1.7. Callback
+### 1.7. Callbacks
 
 Callbacks are the traditionally way to implement async code in JS and avoid blocking code. 
 A callback is just a simple function that is execute when something happend.
@@ -157,3 +157,91 @@ we execute it.
 
 [Examples](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/tree/asynchrounus-jsdeep-dive/asynchronus-javascript-deep-dive/callbacks/examples)
 
+
+<a name='promises'></a>
+### 1.8. Promises
+
+Promises are simple javascript objects with properties and methods,
+we use that methods to take adventage of promises, represents the eventually completion or failure in an asynchronous operation.
+And finally when a promise is complete provides a value with the result of the operation, promises are powerfull way to implement async code in JS.
+
+#### 1.8.1. States
+
+- Pending: No finished yet.
+- Resolved: The promise it´s finished and we had a value to work with it.
+- Rejected: The promise it´s finished with an error.
+
+#### 1.8.2. Basic methods
+
+- then: It´s the asynchronous function that will be executed when we get a successful response (resolved), this function always return a value
+
+```javascript
+   promise.then((response) => {
+     console.log('Do something')
+   })
+```
+- catch: When an error happend or the promise is rejected, we use the method catch to handled the errors through the async function that we send.
+
+```javascript
+    promise.catch((error) => {
+     console.log('Do something :(')
+   })
+```
+
+
+- finally: This method it´s executed no matter what happend, thus it´s useful to clean or restart data
+
+```javascript
+   promise.finally(() => {
+     console.log('Do something')
+   })
+```
+
+#### 1.8.3. Powerfull methods
+Additionally the promise constructor has very powerfull methods that are important to mention.
+
+- all: this function receives an array of promises and wait for everyone to finish, if an error occurs the promise all it´s rejected, and we can use catch to handled it.
+
+```javascript
+   Promise.all([
+     getMessage('Hola', 1000),
+     getMessage('Cómo estas?', 2000),
+     getMessage('Bye', 3000)
+   ]).then(data => {
+     console.log('data --->', data)
+   })
+```
+- race: this function receives an array of promises and wait for someone to finish to be resolved. If  someone fail the promise race it´s rejected.
+
+```javascript
+   Promise.race([
+     getMessage('Hola', 1000),
+     getMessage('Cómo estas?', 2000),
+     getMessage('Bye', 3000)
+   ]).then(data => {
+     console.log('data --->', data)
+   })
+```
+
+- allSettled: this method return all the promises' result no matter if someone was rejected.
+
+```javascript
+   Promise.allSettled([
+     getMessage('Hola', 1000),
+     getMessage('Cómo estas?', 2000),
+     getMessage('Bye', 3000)
+   ]).then((results) => results.forEach((result) => console.log(result.status)))
+```
+- any: this method return a promise that resolves as soon as any of the promises is resolved. if don´t happen is rejected.
+
+```javascript
+   Promise.any([
+     getMessage('Hola', 1000),
+     getMessage('Cómo estas?', 2000),
+     getMessage('Bye', 3000)
+   ]).then((response) => console.log(response))
+```
+
+#### 1.8.4. Some examples
+
+[Examples](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/tree/asynchrounus-jsdeep-dive/asynchronus-javascript-deep-dive/promises/examples)
