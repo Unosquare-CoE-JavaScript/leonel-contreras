@@ -5,6 +5,8 @@ In this path I do some courses, exercises or lectures,
 if you are interested in checking any of them you can click
 the link and get some description about it.
 
+## Principal content:
+
 [ 1. Asynchronous javascript deep dive. ](#asynchronous-javascript-deep-dive)
 
 
