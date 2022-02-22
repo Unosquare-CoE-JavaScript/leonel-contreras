@@ -43,7 +43,7 @@ free to check eveyone!.
 
 [1.9. Async / await.](#async-await)
 
-[1.10. Generator.](#generator) 
+[1.10. Generator.](#generators) 
 
 
 <a name='heap'></a>
@@ -119,7 +119,7 @@ maybe we want to wait and don´t do anything else until user response.
 - Disadvantage: Harder to write.
 
 
-<a name='callback'></a>
+<a name='callbacks'></a>
 ### 1.7. Callbacks
 
 Callbacks are the traditionally way to implement async code in JS and avoid blocking code. 
@@ -245,3 +245,89 @@ Additionally the promise constructor has very powerfull methods that are importa
 #### 1.8.4. Some examples
 
 [Examples](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/tree/asynchrounus-jsdeep-dive/asynchronus-javascript-deep-dive/promises/examples)
+
+<a name='async-await'></a>
+### 1.9. Async / await
+
+Async/await functionality it's an away to simplify Promises through making it look
+like sync code, but including the async functionality from promises. to doing this 
+it´s more easy to reason about promises, basically async/await extend Promises
+making it more powerful, extend don´t mean that we don´t use Promises anymore, 
+we stil find useful cases for promises.
+
+#### 1.9.1. How it look like?
+
+Async / await comes with the function definition and wrap the result in a promise to be handled for the client.
+
+
+```javascript
+   const getData = async () => {
+     return await service.getData()
+   }
+   
+   const data = await getData() // Inside another async function
+```
+
+#### 1.9.2. Keep in mind
+
+- async/await doesn´t make your code asynchronous, it´s just a mecanism to handle async code, to make it easy to understand.
+- async/await doesn´t help you to improve the application's performance.
+- You don´t need to implement asyn/await all around your application, you only use it if make sense, just keep in mind that easy to read code it´s always prefer.
+
+
+#### 1.9.3. Some examples
+
+[Examples](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/tree/asynchrounus-jsdeep-dive/asynchronus-javascript-deep-dive/async-await/examples)
+
+
+<a name='generators'></a>
+### 1.10. Generators
+
+Generators are functions that can return multiple values, one after another,
+on user demand, they works specialy good with iterations, allowing you to create
+data stream with ease.
+
+#### 1.10.1. How it look like?
+
+We need to specify that a function is a generator using * in the function declaration. In order to provide new values we need to use yield to provide values to consumers.
+
+``` javascript
+
+    function *randomNumber(limit = 100) {
+      while (true) {
+        yield Math.floor(Math.random() * limit) + 1
+      }
+    }
+
+```
+
+#### 1.10.2. How to consume ?
+
+In order to consume, we need to call the function to get a generator.
+for consume values we need to call the function next provided by the generator
+
+``` javascript
+    console.log(randomNumber(100).next())
+```
+
+#### 1.10.3. Keep in mind
+
+A generator cand send and also receive information from outside, this mean you can send data
+in every consume iteration and use it inside the generator this is so powerful way to work with
+generator.
+
+```javascript
+   *gen() {
+     let dataFromOutside = yield "Send data please"
+     console.log(dataFromOutside)
+   }
+
+   generator.next('Send value')
+```
+
+#### 1.10.4. Some examples
+
+[Examples](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/tree/asynchrounus-jsdeep-dive/asynchronus-javascript-deep-dive/generators/examples)
+
+
+
