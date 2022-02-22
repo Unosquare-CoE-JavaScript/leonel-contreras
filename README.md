@@ -330,4 +330,12 @@ generator.
 [Examples](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/tree/asynchrounus-jsdeep-dive/asynchronus-javascript-deep-dive/generators/examples)
 
 
+11. Conclusion
+
+In the world of JavaScript Async is one of this pilars that allow you to create beautiful applications, thus is very important to be comfortable with what is, how it works, how to implement it, and how to structure in order to be easy to understand for us, and other members of the team.
+
+[Back to top](#asynchronous-javascript-deep-dive)
+
+
+
 
