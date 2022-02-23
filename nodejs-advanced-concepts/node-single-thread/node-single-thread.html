@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node is single thread</title>
+</head>
+<body>
+  <h1>4. Node single thread</h1>
+  <p>
+    Is NodeJS single thread? well it´s very common to hear it is, but that
+    is not completely true, the event loop is single thread, but exist some
+    frameworks and standard libraries that aren´t single thread and run outside
+    the event loop.
+  </p>
+  <h2>4.1. Example</h2>
+  <p>
+    In the example below we can see that both processes take the same time to response
+    if NodeJS wasn´t single thread that can be imposible, because node would need to 
+    wait for the end of one to start the other one, and this don´t happend.
+  </p>
+  ```Javascript
+    const crypto = require('crypto')
+
+    const start = Date.now()
+
+    crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+      console.log('1: time took', Date.now() - start)
+    })
+
+    crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+      console.log('2: time took', Date.now() - start)
+    })
+
+    crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+      console.log('3: time took', Date.now() - start)
+    })
+  ```
+  <h2>
+    4.2. How multi-thread it´s posible in Node?
+  </h2>
+  <p>
+    The event loop is single thread, but like we saw in the last chapter, the JS Code is received by the JS Side of Nodejs
+    and passed to C++ side through process.binding, and in this side (c++ side) we had the libuv, we know that libuv is responible
+    of concurrency, and also libuv had a thread pool with 4 threads by default. Libuv and C++ side managment this thread pool
+    deciding when to use it.    
+  </p>
+  <h2> 4.3. How to costomize the thread pool?</h2>
+  <p>
+    It´s posible to costomize the libuv thread pool, you only need to change some
+    environments, let´s see how to do it:
+  </p>
+  ```Javascript
+    process.env.UV_THREADPOOL_SIZE=2
+
+  ```
+  <h2>
+    4.4. Additional information about threadpool in NodeJS
+  </h2>
+
+  - We can write custom JS that uses the thread pool.
+  - All fs module functions, some crypto functionality use the threadpool, but depends
+  of the OS (windows or unix)
+  - The event loop only know that task running in the threadpool are pending Operations (pending long running operations)
+  
+  <h2></h2>
+</body>
+</html>

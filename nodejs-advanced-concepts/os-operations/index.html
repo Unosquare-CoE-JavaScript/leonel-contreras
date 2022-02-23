@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>os Operations</title>
+</head>
+<body>
+  <h1> OS operations</h1>
+  <p>
+    We already that Pending Operations ( ) are automatically created by libuv,
+    but what happend with OS operations 
+  </p>
+
+  <h2>
+    5.1. Example
+  </h2>
+
+  ```javascript
+      const https = require('https')
+
+      const start = Date.now()
+
+      const get = () => {
+        https.request('https://www.google.com/', (response) => {
+          response.on('data', () => {})
+          response.on('end', () => {
+            console.log(Date.now() - start)
+          })
+        }).end()
+      }
+
+      get()
+      get()
+      get()
+      get()
+      get()
+      get()
+      get()
+  ```
+  <p>
+    In this example we made an http request to google, and we can saw that all request
+    response in the same time, but we knew that by default libuv by default had a 4 threadpool,
+    how is this possible, well it´s obvious that this is a different approach.
+    
+    In this case libuv gets the http request in the c++ side but don´t have a native way to handled
+    http request, this is one of the most slow operations, insted of handled it, it delegates to the 
+    OS, OS scheduler is responsible for assigning it to threads, this mean that this kind of operations
+    don´t affect libuv and the event loop. 
+  </p>
+  <h2>
+    5.2. Additional information
+  </h2>
+    - Almost everything around networking and some other OS specific use OS´s async features.
+    - The event loop only worry about pendingOSTasks array, and don´t look for specifics releated
+    between libuv and OS operations layer.
+</body>
+</html>
