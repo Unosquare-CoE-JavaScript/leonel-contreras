@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <h1>Promises</h1>
+  <p>
+    Promises are simple javascript objects with properties and methods,
+    we use that methods to take adventage of promises. <br>
+    Represents the eventual completion of failure of and asynchronous operation. <br>
+    And finally when a promise is complete provides a value with the result of the operation. <br>
+    Promises are powerfull way to implement async code in JS
+  </p>
+
+  <h2>States of a promise</h2>
+  <p>
+    A promise can had three statates:
+  <ul>
+    <li>Pending: No finished yet</li>
+    <li>Resolved: The promise it´s finished and we had a value to work with it</li>
+    <li>Rejected: The promise it´s finished with an error</li>
+  </ul>
+  </p>
+  <h2>Basic methods</h2>
+  <ul>
+    <li>
+      then: It´s the asynchronous function that will be executed when we get a successful response (resolved),
+      this function always return a value
+    </li>
+    <pre>
+        <code>
+          promise.then((response) => {
+            console.log('Do something')
+          })
+        </code>
+    </pre>
+    <li>
+      catch: When an error happend or the promise is rejected, we use the method catch to handled the errors through
+      the async function that we send.
+    </li>
+
+    <pre>
+      <code>
+        promise.catch((error) => {
+          console.log('Do something :(')
+        })
+      </code>
+  </pre>
+    <li>
+      finally: This method it´s executed no matter what happend, thus it´s useful to clean or restart data
+    </li>
+
+    <pre>
+      <code>
+        promise.finally(() => {
+          console.log('Do something')
+        })
+      </code>
+  </pre>
+  </ul>
+
+  <h2>Powerfull methods</h2>
+  <p>Additionally the promise construstor has very powerfull methods that are important to mention</p>
+  <ul>
+    <li>
+      all: this function receives an array of promises and wait for everyone to finish, if an error occurs
+      the promise all it´s rejected, and we can use catch to handled it.
+    </li>
+    <pre>
+      <code>
+        Promise.all([
+          getMessage('Hola', 1000),
+          getMessage('Cómo estas?', 2000),
+          getMessage('Bye', 3000)
+        ]).then(data => {
+          console.log('data --->', data)
+        })
+      </code>
+    </pre>
+    <li>
+      race: this function receives an array of promises and wait for someone to finish to be resolved. If 
+      someone fail the promise race it´s rejected.
+    </li>
+    <pre>
+      <code>
+        Promise.race([
+          getMessage('Hola', 1000),
+          getMessage('Cómo estas?', 2000),
+          getMessage('Bye', 3000)
+        ]).then(data => {
+          console.log('data --->', data)
+        })
+      </code>
+    </pre>
+    <li>
+      allSettled: this method return all the promises' result no matter if someone was rejected.
+    </li>
+    <pre>
+      <code>
+        Promise.allSettled([
+          getMessage('Hola', 1000),
+          getMessage('Cómo estas?', 2000),
+          getMessage('Bye', 3000)
+        ]).then((results) => results.forEach((result) => console.log(result.status)))
+      </code>
+    </pre>
+    <li>
+      any: this method return a promise that resolves as soon as any of the promises is resolved.
+      if don´t happen is rejected.
+    </li>
+    <pre>
+      <code>
+        Promise.any([
+          getMessage('Hola', 1000),
+          getMessage('Cómo estas?', 2000),
+          getMessage('Bye', 3000)
+        ]).then((response) => console.log(response))
+      </code>
+    </pre>
+  </ul>
+  <h2> Examples: </h2>
+  <a href="./examples/">./examples</a>
+  <script src="./examples/basic.js"></script>
+  <script src="./examples/api.js"></script>
+  <script src="./examples/sw.js"></script>
+  <script src="./examples/post-json-placeholder.js"></script>
+  <script src="./examples/sw-multiple-request.js"></script>
+  <script src="./examples/post-info.js"></script>
+  <script src="./examples/high-cost-operation.js"></script>
+  <script src="./examples/promise-all-race.js"></script>
+</body>
+
+</html>

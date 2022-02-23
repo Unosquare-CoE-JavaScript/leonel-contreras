@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Async / await</h1>
+  <p>
+    Async/await functionality it's an away to simplify Promises through making it look
+    like sync code, but including the async functionality from promises. Making look like
+    sync code it´s more easy to reason about promises, basically async/await extend Promises
+    making it more powerful, extend it means that we don´t use Promises anymore, well not it all
+    it will be cases when we need promises.
+  </p>
+  <h2>How it look like</h2>
+  <p>
+    Async / await comes with the function definition and wrap the result in a promise to be handled
+    for the client.
+  </p>
+  <pre>
+    <code>
+      const getData = async () => {
+        return await service.getData()
+      }
+    </code>
+  </pre>
+  <h2>Keep in mind</h2>
+  <ul>
+    <li>
+      async/await doesn´t make your code asynchronous, it´s just a mecanism to handle async code,
+      to make it easy to understand.
+    </li>
+    <li>
+      async/await doesn´t help you to improve the application's performance.
+    </li>
+    <li>
+      you don´t need to implement asyn/await all around your application, you only use it if make sense,
+      just keep in mind that easy to read code it´s always prefer.
+    </li>
+  </ul>
+  <script src="./examples/basic.js"></script>
+  <script src="./examples/filter.js"></script>
+  <script src="./examples/refactor.js"></script>
+  <script src="./examples/refactor-post.js"></script>
+  <script src="./examples/async-await-all.js"></script>
+  <script src="./examples/multiple-info.js"></script>
+</body>
+</html>

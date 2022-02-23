@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Syncronous vs Asyncronus</h1>
+    <div>
+        <h2>Syncronous code</h2>
+        <p> 
+            Are codes that execute line to line, in orden to execute the next line, needs to finisih the prevous one.
+            When a process is very complex could take a lot of time to finish, blocking other processes, this mean 
+            you can´t doing anything else unitl the process end, we called this blocking code.
+        </p>
+    </div>
+    <div>
+        <h2>Asyncronus code</h2>
+        <p>
+            Are codes that don´t need to wait to previous lines finish to execute the new ones, when we use Asyncronus we
+            know that in some point in the time we'll get a response but we don´t know when, this kind of code it´s called
+          |  no-blocking code, the most of the time in JS we prefer to use it, but may exist some exceptions for example
+            maybe we want to wait and don´t do anything else until user response.
+        </p>
+    </div>
+    <div>
+        <h2>Advantages and disadvantages</h2>
+        <div>
+            <h3>Synchronous code</h3>
+            <li>
+                <ul>Advantage: Easy to write and to reason about it</ul>
+                <ul>Disadvantage: May create blocking code</ul>
+                <ul>Disadvantage: Less performance</ul>
+            </li>
+        </div>
+        <div>
+            <h3>Asynchronus code</h3>
+            <li>
+                <ul>Advantage: very performant</ul>
+                <ul>Advantage: Eliminates code blocking</ul>
+                <ul>Disadvantage: It can be difficult to reason about</ul>
+                <ul>Disadvantage: Harder to write</ul>
+            </li>
+        </div>
+    </div>
+</body>
+</html>

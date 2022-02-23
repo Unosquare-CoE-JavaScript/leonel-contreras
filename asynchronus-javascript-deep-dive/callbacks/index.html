@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Callbacks</h1>
+    <p>
+        Callbacks are the traditionally way to implement async code
+        in JS and avoid blocking code. <br>
+        A callback is just a simple function that is execute when something
+        happend. <br>
+    </p>
+
+    <h2>How callbacks are possible?</h2>
+    <p>
+        In javascript exist objects we can define it, but also variables are object
+        and maybe the most wear situation it´s that functions also are objects,
+        this is very important in JS 'cause allow you to pass function to another
+        functions (A function that receives another function trough param it´s called
+        higher order function), and this allows you to execute a function inside another 
+        function. 
+    </p>
+    <H2>Examples</H2>
+    <p>
+        A very basic example of callbacks are events, for example listen for a click
+        in some button, we attach some function to the click event, and when click happend
+        we execute it.
+    </p>
+    <h2>Problems</h2>
+    <p>
+        <ul>
+            <li>Callback hell</li>
+            <li>Difficult to reason about</li>
+            <li>Inversion of control</li>
+        </ul>
+    </p>
+</body>
+</html>

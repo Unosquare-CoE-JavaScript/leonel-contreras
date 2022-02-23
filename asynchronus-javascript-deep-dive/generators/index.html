@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generators</title>
+</head>
+<body>
+  <h1>Generators</h1>
+  <p>
+    Generators are functions that can return multiple values, one after another,
+    on user demand, they works specialy good with iterations, allowing you to create
+    data stream with ease.
+  </p>
+  <h2>How it look like?</h2>
+  <p>
+    we need to specify that a function is a generator using * in the function declaration. 
+  </p>
+  <p>In order to provide new values we need to use yield to provide values to consumers</p>
+  <pre>
+    <code>
+      function *randomNumber(limit = 100) {
+        while (true) {
+          yield Math.floor(Math.random() * limit) + 1
+        }
+      }
+    </code>
+  </pre>
+  <h2>How to consume?</h2>
+  <p>In order to consume, we need to call the function to get a generator.</p>
+  <p>for consume values we need to call the function next provided by the generator</p>
+  <pre>
+    <code>
+      console.log(randomNumber(100).next())
+    </code>
+  </pre>
+  <h2>Important information</h2>
+  <p>
+    A generator cand send and also receive information from outside, this mean you can send data
+    in every consume iteration and use it inside the generator this is so powerful way to work with
+    generator.
+  </p>
+  <pre>
+    <code>
+      *gen() {
+        let dataFromOutside = yield "Send data please"
+        console.log(dataFromOutside)
+      }
+
+      generator.next('Send value')
+    </code>
+  </pre>
+  <script src="./examples/index.js"></script>
+</body>
+</html>
