@@ -9,6 +9,8 @@ the link and get some description about it.
 
 [ 1. Asynchronous javascript deep dive. ](#asynchronous-javascript-deep-dive)
 
+[ 2. NodeJS advanced concepts. ](#nodejs-advanced-concepts)
+
 
 Okay, are you ready?, Here we go.
 
@@ -338,5 +340,82 @@ In the world of JavaScript Async is one of this pilars that allow you to create 
 
 
 
+<a name='nodejs-advanced-concepts'></a>
 
-node_modules
+## 2. NodeJS advanced concepts
+
+[Back to principal content](#leo)
+
+In this course we´ll check how NodeJS works an use this knowledge to improve the application performance
+
+### Content:
+
+[2.1. NodeJS Internals.](#internals)
+
+[2.2. Enhancing NodeJS performance.](#enhancing-node-performance)
+
+
+<a name='internals'></a>
+### 2.1. Internals
+
+In this section we will talk about the internals of nodejs, how it works,
+how it was developed, and specifics of event loop and the releated libraries
+like libuv.
+
+#### 2.1.1. What is NodeJS?
+
+Nodejs is an environment to run JS code, it's multi-purpose, that means you can build
+web applications, batch processes, APIs, tools, and much more.
+
+#### 2.1.2. How NodeJS woks?
+
+NodeJS is build in Javascript and C++, and use 2 principal elements that allows you
+to run JS code in basically any environment (Thanks c++) V8 and libuv.
+
+- V8: Is the JS engine (interpret and run js code) that it´s used in NodeJS, and it was build by google.
+
+- Libuv: Is used for accesing the filesystem and control some aspects around concurrency.
+
+![NodeJS-STRUCTURE](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/basic%20concepts/images/Screen%20Shot%202022-02-22%20at%2011.03.26.png)
+
+#### 2.1.3. How NodeJS can run JS Code?
+
+All the code that we wrote in NodeJS it happend in the JS Side (for example when we import a library),
+internaly it´s common that this side just do some validation and very simple things, and this used a very interesting
+method process.binding that links a function in the C++ side with the JS side, this likend function (c++)
+is where things happends, is here where you can find the logic to solve things, but how can interpret JS?
+or control the async aspects or concurrency?, well to do this it used v8 and libuv, v8 act as intermediary allowing
+values that are defined in JS side to be translated into the c++ equivalence, and libuv it´s use to allowed concurrency
+and procesing construct in c++ side.
+
+![NodeJS-able-run-js-code](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/basic%20concepts/images/Screen%20Shot%202022-02-22%20at%2011.12.00.png)
+
+### 2.2. Threads
+
+When we run programs in our computer we start something called process. A process is
+an instance of a computer program, when a process is running could had
+more than one thread. 
+You can see a thread like a little to do list with a some numbers of instructions that need to be executed by the cpu.
+To decide what thread have been executed the operating system had a scheduler. Scheduler it´s 
+responsable to ensure that urgent threads are executed and all the threads don´t wait
+to much to be resolved. 
+
+![Threads](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/threads/images/Screen%20Shot%202022-02-22%20at%2012.08.48.png)
+
+#### 2.2.1. How to improve thread execution?
+
+- Adding more cpus core: if you had more than one core you can process differents threads at the same time (
+technically one core can process more than one thread through multi-threading tecniques).
+
+- Examing the work that threads are doing: For example when one thread it´s waiting for something like accesing to the HD,
+thus this operation is very slow, the scheduler can decide to pause it and execute others meanwhile.
+
+![Improve-threads-performance](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/threads/images/Screen%20Shot%202022-02-22%20at%2012.10.18.png)
+
+### 2.3. Event loop
+
+When we start a NodeJS program, node automatically creates one thread, and executes all our code inside
+that single thread, inside that single thread exist the event loop, the event loop is a control structure 
+that decides what our one thread should be doing at any given point of time, the event loop is the absolute
+core of every node application, and any node application had only one event loop.
+
