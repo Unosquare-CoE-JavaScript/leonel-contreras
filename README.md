@@ -352,7 +352,14 @@ In this course we´ll check how NodeJS works an use this knowledge to improve th
 
 [2.1. NodeJS Internals.](#internals)
 
-[2.2. Enhancing NodeJS performance.](#enhancing-node-performance)
+[2.2. Threads.](#threads)
+
+[2.3. Event loop.](#event-loop-nodejs)
+
+[2.4. NodeJS single thread?, review...](#nodejs-single-thread)
+
+[2.5. OS Operation in NodeJS](#os-operation-nodejs)
+
 
 
 <a name='internals'></a>
@@ -390,6 +397,7 @@ and procesing construct in c++ side.
 
 ![NodeJS-able-run-js-code](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/basic%20concepts/images/Screen%20Shot%202022-02-22%20at%2011.12.00.png)
 
+<a name='threads'></a>
 ### 2.2. Threads
 
 When we run programs in our computer we start something called process. A process is
@@ -412,6 +420,7 @@ thus this operation is very slow, the scheduler can decide to pause it and execu
 
 ![Improve-threads-performance](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/threads/images/Screen%20Shot%202022-02-22%20at%2012.10.18.png)
 
+<a name='event-loop-nodejs'></a>
 ### 2.3. Event loop
 
 When we start a NodeJS program, node automatically creates one thread, and executes all our code inside
@@ -420,34 +429,131 @@ that decides what our one thread should be doing at any given point of time, the
 core of every node application, and any node application had only one event loop.
 
 
-#### 2.1. How the event loop works?
+#### 2.3.1. How the event loop works?
 
 - In the first step NodeJS executes our code.
 - Once the code is executed the event loop start.
 - The event loop will run until don´t have more things to execute.
 
-##### 2.1.1. How the event loop decides to continue or not?
+##### 2.3.2. How the event loop decides to continue or not?
 
 First you need to think the event loop as a while structure and any iteration in it 
 as a tick, in any new iteration the event loop check if is necesary to continues or no,
 to do this the event loop ask for the next situations:
 
-- 1. Any pending setTimeOut, setInterval or setImmediate.
-- 2. Any pending OS tasks? (server listening to port, http/https ).
-- 3. Any pending long running operations? (like fs module).
+1. Any pending setTimeOut, setInterval or setImmediate.
+2. Any pending OS tasks? (server listening to port, http/https ).
+3. Any pending long running operations? (like fs module).
 
-##### 2.1.1.1. What event loop do in ticks?
+##### 2.3.3. What event loop do in any ticks?
 
-- 1. Node looks at pendingTimers (setTimeOut, setInterval) and sees if any functions are ready to be called.
-- 2. Node looks at pending OS tasks and pending operations and calls relevant callbacks.
-- 3. Pause execution and continue when:
-  - A new pendingOSTask is done.
-  - A new pending operation is donde.
-  - A timer is about to complete.
-- 4. Look at pendingTimers (setImmediate).
-- 5. Handle any 'close' events.
+1. Node looks at pendingTimers (setTimeOut, setInterval) and sees if any functions are ready to be called.
+2. Node looks at pending OS tasks and pending operations and calls relevant callbacks.
+3. Pause execution and continue when:
+   - A new pendingOSTask is done.
+   - A new pending operation is donde.
+   - A timer is about to complete.
+4. Look at pendingTimers (setImmediate).
+5. Handle any 'close' events.
+
+<a name="nodejs-single-thread"></a>
+
+### 2.4. NodeJS Single thread
+
+Is NodeJS single thread? well it´s very common to hear it is, but that
+is not completely true, the event loop is single thread, but exist some
+frameworks and standard libraries that aren´t single thread and run outside
+the event loop.
+
+#### 2.4.1. Example
+
+In the example below we can see that both processes take the same time to response
+if NodeJS wasn´t single thread that can be imposible, because node would need to 
+wait for the end of one to start the other one, and this don´t happend, we'll discus
+the whys about this example.
+
+```Javascript
+  const crypto = require('crypto')
+
+  const start = Date.now()
+
+  crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+    console.log('1: time took', Date.now() - start)
+  })
+
+  crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+    console.log('2: time took', Date.now() - start)
+  })
+
+  crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+    console.log('3: time took', Date.now() - start)
+  })
+```
+
+#### 2.4.2. How multi-thread it´s posible in Node?
+
+The event loop is single thread, but like we saw in the last chapter, the JS Code is received by the JS Side of Nodejs
+and passed to C++ side through process.binding, and in this side (c++ side) we had the libuv, we know that libuv is responible
+of concurrency, and also libuv had a thread pool with 4 threads by default. Libuv and C++ side managment this thread pool
+deciding when to use it, and that is one of the whys nodeJS no is 100 % single thread.
+
+#### 2.4.3. How to costomize the thread pool?
+
+It´s posible to costomize the libuv thread pool, you only need to change some
+environments, let´s see how to do it:
+
+```Javascript
+  process.env.UV_THREADPOOL_SIZE=2
+```
+
+#### 2.4.4. Additional information about threadpool in NodeJS
+
+- We can write custom JS that uses the thread pool.
+- All fs module functions, some crypto functionality use the threadpool, but depends of the OS (windows or unix)
+- The event loop only know that task running in the threadpool are pending Operations (pending long running operations)
+
+<a name="os-operation-nodejs"></a>
+
+2.5. OS Operations in NodeJS 
+
+We already view that Pending Operations (pending long running operations) are automatically created by libuv, 
+but what happend with OS operations, we'll see an example completly handled by the OS:
+
+  ```javascript
+      const https = require('https')
+
+      const start = Date.now()
+
+      const get = () => {
+        https.request('https://www.google.com/', (response) => {
+          response.on('data', () => {})
+          response.on('end', () => {
+            console.log(Date.now() - start)
+          })
+        }).end()
+      }
+
+      get()
+      get()
+      get()
+      get()
+      get()
+      get()
+      get()
+  ```
+  
+In this example we made an http request to google, and all request
+response in the same time, but how this is possible? if we knew that by default libuv  had 4 threads; 
+Well it´s obvious that this is a different approach, lets response the whys. In this case libuv 
+gets the http request in the c++ side like in the other case, but libuv don´t have a native way to handled http request, 
+because this is one of the most slow operations, insted of handled it, it delegates to the 
+OS, OS scheduler is responsible for assigning it to threads, this mean that this kind of operations
+don´t affect libuv, the thread pool and the event loop directly. 
 
 
+2.5.1. Additional information
 
-
+- Almost everything around networking and some other OS specific use OS´s async features.
+- The event loop only worry about pendingOSTasks array, and don´t look for specifics releated
+between libuv and OS operations layer.
 
