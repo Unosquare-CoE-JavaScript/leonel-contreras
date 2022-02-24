@@ -419,3 +419,35 @@ that single thread, inside that single thread exist the event loop, the event lo
 that decides what our one thread should be doing at any given point of time, the event loop is the absolute
 core of every node application, and any node application had only one event loop.
 
+
+#### 2.1. How the event loop works?
+
+- In the first step NodeJS executes our code.
+- Once the code is executed the event loop start.
+- The event loop will run until don´t have more things to execute.
+
+##### 2.1.1. How the event loop decides to continue or not?
+
+First you need to think the event loop as a while structure and any iteration in it 
+as a tick, in any new iteration the event loop check if is necesary to continues or no,
+to do this the event loop ask for the next situations:
+
+- 1. Any pending setTimeOut, setInterval or setImmediate.
+- 2. Any pending OS tasks? (server listening to port, http/https ).
+- 3. Any pending long running operations? (like fs module).
+
+##### 2.1.1.1. What event loop do in ticks?
+
+- 1. Node looks at pendingTimers (setTimeOut, setInterval) and sees if any functions are ready to be called.
+- 2. Node looks at pending OS tasks and pending operations and calls relevant callbacks.
+- 3. Pause execution and continue when:
+  - A new pendingOSTask is done.
+  - A new pending operation is donde.
+  - A timer is about to complete.
+- 4. Look at pendingTimers (setImmediate).
+- 5. Handle any 'close' events.
+
+
+
+
+
