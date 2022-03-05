@@ -360,7 +360,17 @@ In this course we´ll check how NodeJS works an use this knowledge to improve th
 
 [2.5. OS Operation in NodeJS](#os-operation-nodejs)
 
+[2.6. Enhance node performance](#enhance-node-performance)
 
+[2.7. Data caching with Redis](#data-caching-with-redis)
+
+[2.8. Automated handless browser testing](#automated-handless-broser-testing)
+
+[2.9. Continuous integration](#continuous-integration)
+
+[2.10. Scalable Image/file upload](#scalable-image-file-upload)
+
+### 
 
 <a name='internals'></a>
 ### 2.1. Internals
@@ -456,6 +466,8 @@ to do this the event loop ask for the next situations:
 4. Look at pendingTimers (setImmediate).
 5. Handle any 'close' events.
 
+![event-loop](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/node-single-thread/images/wrtzmt2ty03ksew7ehvx.jpeg)
+
 <a name="nodejs-single-thread"></a>
 
 ### 2.4. NodeJS Single thread
@@ -514,7 +526,7 @@ environments, let´s see how to do it:
 
 <a name="os-operation-nodejs"></a>
 
-2.5. OS Operations in NodeJS 
+### 2.5. OS Operations in NodeJS 
 
 We already view that Pending Operations (pending long running operations) are automatically created by libuv, 
 but what happend with OS operations, we'll see an example completly handled by the OS:
@@ -551,9 +563,94 @@ OS, OS scheduler is responsible for assigning it to threads, this mean that this
 don´t affect libuv, the thread pool and the event loop directly. 
 
 
-2.5.1. Additional information
+#### 2.5.1. Additional information
 
 - Almost everything around networking and some other OS specific use OS´s async features.
 - The event loop only worry about pendingOSTasks array, and don´t look for specifics releated
 between libuv and OS operations layer.
 
+<a name="enhance-node-performance"></a>
+
+### 2.6. Enhance node performance
+
+when a process take to  long in response may cause event loop blocking, and this 
+is a very seriuos problem, because that means you're blocking the entire serve unable
+to resolve other request, but sometimes maybe we don´t have other options that do this
+very heavy problems, and when this happend it´s to enhance the performance runing more than
+one process, and we can doing this with one of the folling techniques:
+
+- using nodejs in cluster mode
+
+  Cluster mode allows to run different instances of a NodeJS application, making possible improve
+  the speed that we usually response.
+  
+  How to do it?
+  
+  to do this, we need to use the cluster native NodeJS library, thats allow yo to create a master,
+  and children process applications, we´ll see an example:
+  
+    ````javascript
+      const cluster = require('cluster')
+      const proc = require('process')
+      const express = require('express')
+
+
+      if (cluster.isPrimary) { // This is the master and will config the cluster mode
+        cluster.fork() // We create one instance or child 
+        cluster.fork() // we create the secound one
+      
+        cluster.on('exit', (worker, code, signal) => {
+          console.log(`worker ${worker.process.pid} died`);
+        })
+      } else {
+        const app = express()
+
+        app.get('/fast', (request, response) => {
+          response.send('I finished fast')
+        })
+      
+        app.listen(3000)
+        
+        console.log(`Worker ${proc.pid} started`); // with this we can know about the actual process id
+      }
+  ````
+  
+    Additional information
+
+    - Avoid to config more cluster or process than the physical machine's core.
+
+- use workers threads:
+
+    We already view the way to config a cluster directly in NodeJS, but doing in that way means
+    that you need to add aditional code in order to accomplish it, and do changes in you code when
+    you require diferents configurations; to avoid this problems we can use other tools specific
+    for this kind of goals, for example PM2, pm2 is a NodeJS library that allows clustering, monitoring,
+    keep alive and other productions needs.
+
+    Finally just will se some pm2 commands:
+
+    - pm2 start index.js --i 0
+    - pm2 list
+    - pm2 show 0
+    - pm2 show index
+    - pm2 monit
+    - pm2 stop 0 / pm2 stop index
+    - pm2 delete 0 / pm2 delete index
+
+<a name="data-caching-with-redis"></a>
+
+### 2.7. Data caching with Redis
+
+<a name="automated-handless-broser-testing"></a>
+
+### 2.8. Automated handless browser testing
+
+<a name="continuous-integration"></a>
+
+### 2.9. Continuous integration
+
+<a name="scalable-image-file-upload"></a>
+
+### 2.10. Scalable Image/file upload
+
+[Back to NodeJS advanced concepts](#nodejs-advanced-concepts)
