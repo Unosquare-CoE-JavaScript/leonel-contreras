@@ -641,9 +641,55 @@ one process, and we can doing this with one of the folling techniques:
 
 ### 2.7. Data caching with Redis
 
+Redis is an in-memory data structure store, used as a database, cache, and message broker. Redis provides data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes, and streams. Redis has built-in replication, Lua scripting, LRU eviction, transactions, and different levels of on-disk persistence, and provides high availability via Redis Sentinel and automatic partitioning with Redis Cluster.
+
+#### 2.7.1. Caching
+
+A very common used in Redis is caching, caching is a technique that help us to increase the time response, thus Redis is an in-memory.
+
+when we use catching, we need to focus in the next situations:
+
+- What data is relevant for caching?
+- What would be the key?
+- How to move data to caching area?
+- How to retrieve data from caching area?
+- The life time for cache data
+
+!(caching-data)[#]
+
+#### 2.7.2. Basic commands 
+
+- 
+```javascript
+  redis.createClient('redis://127.0.0.1:6379') // connection to default server
+  
+  client.get(key) // Get element
+  client.hget(rootKet, childKey) // root parent
+
+  client.hset(key, value) // Store element
+  client.hset(key, value, 'EX', 10) // Store with time expiration
+  
+  // Store root parent with time expiration
+  client.hset(rootKey, Childkey, JSON.stringify(result), 'EX', 10)
+```
+
 <a name="automated-handless-broser-testing"></a>
 
 ### 2.8. Automated handless browser testing
+
+#### 2.8.1. Unit testing
+
+#### 2.8.2. End to end testing
+
+#### 2.8.3. Functional testing
+
+#### 2.8.4. Jest
+
+##### 2.8.4.1. Basic commands
+
+#### 2.8.5. Puppeteer
+
+##### 2.8.5.1. Basic commands
 
 <a name="continuous-integration"></a>
 
