@@ -9,6 +9,8 @@ the link and get some description about it.
 
 [ 1. Asynchronous javascript deep dive. ](#asynchronous-javascript-deep-dive)
 
+[ 2. NodeJS advanced concepts. ](#nodejs-advanced-concepts)
+
 
 Okay, are you ready?, Here we go.
 
@@ -338,4 +340,463 @@ In the world of JavaScript Async is one of this pilars that allow you to create 
 
 
 
+<a name='nodejs-advanced-concepts'></a>
 
+## 2. NodeJS advanced concepts
+
+[Back to principal content](#leo)
+
+In this course we´ll check how NodeJS works an use this knowledge to improve the application performance
+
+### Content:
+
+[2.1. NodeJS Internals.](#internals)
+
+[2.2. Threads.](#threads)
+
+[2.3. Event loop.](#event-loop-nodejs)
+
+[2.4. NodeJS single thread?, review...](#nodejs-single-thread)
+
+[2.5. OS Operation in NodeJS](#os-operation-nodejs)
+
+[2.6. Enhance node performance](#enhance-node-performance)
+
+[2.7. Data caching with Redis](#data-caching-with-redis)
+
+[2.8. Automated handless browser testing](#automated-handless-broser-testing)
+
+[2.9. Continuous integration](#continuous-integration)
+
+[2.10. Scalable Image/file upload](#scalable-image-file-upload)
+
+[2.11. Link to project](#project)
+
+### 
+
+<a name='internals'></a>
+### 2.1. Internals
+
+In this section we will talk about the internals of nodejs, how it works,
+how it was developed, and specifics of event loop and the releated libraries
+like libuv.
+
+#### 2.1.1. What is NodeJS?
+
+Nodejs is an environment to run JS code, it's multi-purpose, that means you can build
+web applications, batch processes, APIs, tools, and much more.
+
+#### 2.1.2. How NodeJS woks?
+
+NodeJS is build in Javascript and C++, and use 2 principal elements that allows you
+to run JS code in basically any environment (Thanks c++) V8 and libuv.
+
+- V8: Is the JS engine (interpret and run js code) that it´s used in NodeJS, and it was build by google.
+
+- Libuv: Is used for accesing the filesystem and control some aspects around concurrency.
+
+![NodeJS-STRUCTURE](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/basic%20concepts/images/Screen%20Shot%202022-02-22%20at%2011.03.26.png)
+
+#### 2.1.3. How NodeJS can run JS Code?
+
+All the code that we wrote in NodeJS it happend in the JS Side (for example when we import a library),
+internaly it´s common that this side just do some validation and very simple things, and this used a very interesting
+method process.binding that links a function in the C++ side with the JS side, this likend function (c++)
+is where things happends, is here where you can find the logic to solve things, but how can interpret JS?
+or control the async aspects or concurrency?, well to do this it used v8 and libuv, v8 act as intermediary allowing
+values that are defined in JS side to be translated into the c++ equivalence, and libuv it´s use to allowed concurrency
+and procesing construct in c++ side.
+
+![NodeJS-able-run-js-code](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/basic%20concepts/images/Screen%20Shot%202022-02-22%20at%2011.12.00.png)
+
+<a name='threads'></a>
+### 2.2. Threads
+
+When we run programs in our computer we start something called process. A process is
+an instance of a computer program, when a process is running could had
+more than one thread. 
+You can see a thread like a little to do list with a some numbers of instructions that need to be executed by the cpu.
+To decide what thread have been executed the operating system had a scheduler. Scheduler it´s 
+responsable to ensure that urgent threads are executed and all the threads don´t wait
+to much to be resolved. 
+
+![Threads](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/threads/images/Screen%20Shot%202022-02-22%20at%2012.08.48.png)
+
+#### 2.2.1. How to improve thread execution?
+
+- Adding more cpus core: if you had more than one core you can process differents threads at the same time (
+technically one core can process more than one thread through multi-threading tecniques).
+
+- Examing the work that threads are doing: For example when one thread it´s waiting for something like accesing to the HD,
+thus this operation is very slow, the scheduler can decide to pause it and execute others meanwhile.
+
+![Improve-threads-performance](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/threads/images/Screen%20Shot%202022-02-22%20at%2012.10.18.png)
+
+<a name='event-loop-nodejs'></a>
+### 2.3. Event loop
+
+When we start a NodeJS program, node automatically creates one thread, and executes all our code inside
+that single thread, inside that single thread exist the event loop, the event loop is a control structure 
+that decides what our one thread should be doing at any given point of time, the event loop is the absolute
+core of every node application, and any node application had only one event loop.
+
+
+#### 2.3.1. How the event loop works?
+
+- In the first step NodeJS executes our code.
+- Once the code is executed the event loop start.
+- The event loop will run until don´t have more things to execute.
+
+##### 2.3.2. How the event loop decides to continue or not?
+
+First you need to think the event loop as a while structure and any iteration in it 
+as a tick, in any new iteration the event loop check if is necesary to continues or no,
+to do this the event loop ask for the next situations:
+
+1. Any pending setTimeOut, setInterval or setImmediate.
+2. Any pending OS tasks? (server listening to port, http/https ).
+3. Any pending long running operations? (like fs module).
+
+##### 2.3.3. What event loop do in any ticks?
+
+1. Node looks at pendingTimers (setTimeOut, setInterval) and sees if any functions are ready to be called.
+2. Node looks at pending OS tasks and pending operations and calls relevant callbacks.
+3. Pause execution and continue when:
+   - A new pendingOSTask is done.
+   - A new pending operation is donde.
+   - A timer is about to complete.
+4. Look at pendingTimers (setImmediate).
+5. Handle any 'close' events.
+
+![event-loop](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/node-single-thread/images/wrtzmt2ty03ksew7ehvx.jpeg)
+
+<a name="nodejs-single-thread"></a>
+
+### 2.4. NodeJS Single thread
+
+Is NodeJS single thread? well it´s very common to hear it is, but that
+is not completely true, the event loop is single thread, but exist some
+frameworks and standard libraries that aren´t single thread and run outside
+the event loop.
+
+#### 2.4.1. Example
+
+In the example below we can see that both processes take the same time to response
+if NodeJS wasn´t single thread that can be imposible, because node would need to 
+wait for the end of one to start the other one, and this don´t happend, we'll discus
+the whys about this example.
+
+```Javascript
+  const crypto = require('crypto')
+
+  const start = Date.now()
+
+  crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+    console.log('1: time took', Date.now() - start)
+  })
+
+  crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+    console.log('2: time took', Date.now() - start)
+  })
+
+  crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', (err, key) => {
+    console.log('3: time took', Date.now() - start)
+  })
+```
+
+#### 2.4.2. How multi-thread it´s posible in Node?
+
+The event loop is single thread, but like we saw in the last chapter, the JS Code is received by the JS Side of Nodejs
+and passed to C++ side through process.binding, and in this side (c++ side) we had the libuv, we know that libuv is responible
+of concurrency, and also libuv had a thread pool with 4 threads by default. Libuv and C++ side managment this thread pool
+deciding when to use it, and that is one of the whys nodeJS no is 100 % single thread.
+
+#### 2.4.3. How to costomize the thread pool?
+
+It´s posible to costomize the libuv thread pool, you only need to change some
+environments, let´s see how to do it:
+
+```Javascript
+  process.env.UV_THREADPOOL_SIZE=2
+```
+
+#### 2.4.4. Additional information about threadpool in NodeJS
+
+- We can write custom JS that uses the thread pool.
+- All fs module functions, some crypto functionality use the threadpool, but depends of the OS (windows or unix)
+- The event loop only know that task running in the threadpool are pending Operations (pending long running operations)
+
+<a name="os-operation-nodejs"></a>
+
+### 2.5. OS Operations in NodeJS 
+
+We already view that Pending Operations (pending long running operations) are automatically created by libuv, 
+but what happend with OS operations, we'll see an example completly handled by the OS:
+
+  ```javascript
+      const https = require('https')
+
+      const start = Date.now()
+
+      const get = () => {
+        https.request('https://www.google.com/', (response) => {
+          response.on('data', () => {})
+          response.on('end', () => {
+            console.log(Date.now() - start)
+          })
+        }).end()
+      }
+
+      get()
+      get()
+      get()
+      get()
+      get()
+      get()
+      get()
+  ```
+  
+In this example we made an http request to google, and all request
+response in the same time, but how this is possible? if we knew that by default libuv  had 4 threads; 
+Well it´s obvious that this is a different approach, lets response the whys. In this case libuv 
+gets the http request in the c++ side like in the other case, but libuv don´t have a native way to handled http request, 
+because this is one of the most slow operations, insted of handled it, it delegates to the 
+OS, OS scheduler is responsible for assigning it to threads, this mean that this kind of operations
+don´t affect libuv, the thread pool and the event loop directly. 
+
+
+#### 2.5.1. Additional information
+
+- Almost everything around networking and some other OS specific use OS´s async features.
+- The event loop only worry about pendingOSTasks array, and don´t look for specifics releated
+between libuv and OS operations layer.
+
+<a name="enhance-node-performance"></a>
+
+### 2.6. Enhance node performance
+
+when a process take to  long in response may cause event loop blocking, and this 
+is a very seriuos problem, because that means you're blocking the entire serve unable
+to resolve other request, but sometimes maybe we don´t have other options that do this
+very heavy problems, and when this happend it´s to enhance the performance runing more than
+one process, and we can doing this with one of the folling techniques:
+
+- using nodejs in cluster mode
+
+  Cluster mode allows to run different instances of a NodeJS application, making possible improve
+  the speed that we usually response.
+  
+  How to do it?
+  
+  to do this, we need to use the cluster native NodeJS library, thats allow yo to create a master,
+  and children process applications, we´ll see an example:
+  
+    ````javascript
+      const cluster = require('cluster')
+      const proc = require('process')
+      const express = require('express')
+
+
+      if (cluster.isPrimary) { // This is the master and will config the cluster mode
+        cluster.fork() // We create one instance or child 
+        cluster.fork() // we create the secound one
+      
+        cluster.on('exit', (worker, code, signal) => {
+          console.log(`worker ${worker.process.pid} died`);
+        })
+      } else {
+        const app = express()
+
+        app.get('/fast', (request, response) => {
+          response.send('I finished fast')
+        })
+      
+        app.listen(3000)
+        
+        console.log(`Worker ${proc.pid} started`); // with this we can know about the actual process id
+      }
+  ````
+  
+    Additional information
+
+    - Avoid to config more cluster or process than the physical machine's core.
+
+- use workers threads:
+
+    We already view the way to config a cluster directly in NodeJS, but doing in that way means
+    that you need to add aditional code in order to accomplish it, and do changes in you code when
+    you require diferents configurations; to avoid this problems we can use other tools specific
+    for this kind of goals, for example PM2, pm2 is a NodeJS library that allows clustering, monitoring,
+    keep alive and other productions needs.
+
+    Finally just will se some pm2 commands:
+
+    - pm2 start index.js --i 0
+    - pm2 list
+    - pm2 show 0
+    - pm2 show index
+    - pm2 monit
+    - pm2 stop 0 / pm2 stop index
+    - pm2 delete 0 / pm2 delete index
+
+<a name="data-caching-with-redis"></a>
+
+### 2.7. Data caching with Redis
+
+Redis is an in-memory data structure store, used as a database, cache, and message broker. Redis provides data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes, and streams. Redis has built-in replication, Lua scripting, LRU eviction, transactions, and different levels of on-disk persistence, and provides high availability via Redis Sentinel and automatic partitioning with Redis Cluster.
+
+#### 2.7.1. Caching
+
+A very common used in Redis is caching, caching is a technique that help us to increase the time response, thus Redis is an in-memory.
+
+when we use catching, we need to focus in the next situations:
+
+- What data is relevant for caching?
+- What would be the key?
+- How to move data to caching area?
+- How to retrieve data from caching area?
+- The life time for cache data
+
+![caching-data](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/cache/images/Screen%20Shot%202022-02-28%20at%2010.29.16.png)
+
+#### 2.7.2. Basic commands 
+
+```javascript
+  redis.createClient('redis://127.0.0.1:6379') // connection to default server
+  
+  client.get(key) // Get element
+  client.hget(rootKet, childKey) // root parent
+
+  client.set(key, value) // Store element
+  client.hset(key, value, 'EX', 10) // Store with time expiration
+  
+  // Store root parent with time expiration
+  client.hset(rootKey, Childkey, JSON.stringify(result), 'EX', 10)
+```
+
+<a name="automated-handless-broser-testing"></a>
+
+### 2.8. Automated handless browser testing
+
+Testing is one of the pillars of software development, without it, we could ensure a minimum grade of quality, but in some cases it colud be a complex task when team and softwere grows, hower we could use
+a lot of tools that help us to accomplish.
+
+#### 2.8.1. Unit testing
+
+A unit test is a way of testing a unit - the smallest piece of code that can be logically isolated in a system. In most programming languages, that is a function, a subroutine, a component, a method or property.
+
+![UNIT_TESTING](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/testing/images/Screen%20Shot%202022-02-28%20at%2017.05.23.png)
+
+#### 2.8.2. End to end testing
+
+End-to-end testing is a methodology used in the software development lifecycle (SDLC) to test the functionality and performance of an application under product-like circumstances and data to replicate live settings. The goal is to simulate what a real user scenario looks like from start to finish.
+
+#### 2.8.4. Jest
+
+JavaScript Testing Framework with a focus on simplicity that works with projects using: Babel, TypeScript, Node, React, Angular, Vue, and others, allow you to use snapshots, mocks, factories, code coverage, and other tools that help us with automated testing.
+
+
+![test_flow](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/testing/images/Screen%20Shot%202022-02-28%20at%2017.06.50.png)
+
+##### 2.8.4.1. Example using jest
+
+
+````javascript
+  beforeEach(() => { // We define some activities before start testing
+    console.log('Hi')
+  })
+
+  define('Serie of releated tests', () => { // Define a test suite
+    cosole.log('I will start working')
+
+    test('First test', () => { // a test
+      console.log('working 1')
+      expect(1).toEqual(1) // assertion
+    })
+
+    test('Secound test', () => {  // a test
+      console.log('working 2')
+      expect('A').toBe('A') // assertion
+    })
+
+    test('Third test', () => { // a test
+      console.log('working 3')
+      expect({value: 1}).toEqual({value: 1}) // aseertion
+    })
+  })
+  
+  afterAll(() => { // Final activities before finish the entire flow
+    console.log('Bye') 
+  })
+````
+
+#### 2.8.5. Puppeteer
+
+Puppeteer is a helper tools that allows you to implement end-to-end testing, through browser instance, allow you to use page acctions like open new windows, clicks, dom-selector, and also http request, it´s a powerfull tool that simulate all the user interection within browser.
+
+![Puppeteer](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/testing/images/Screen%20Shot%202022-03-01%20at%2010.34.18.png)
+
+##### 2.8.5.1. Basic commands
+
+```javascript
+  const puppeteer = require('puppeteer')
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox']
+  })
+
+  const page = await browser.newPage() // Open new page
+  await page.goto('http://localhost:3000') // Load a web page
+  await page.click('a.btn-floating') // click element in the page
+  await this.page.waitFor('a[href="/auth/logout"]') // wait for element to be render
+  await this.page.$eval(selector, el => el.innerHTML) // dom selecction and innerHTML returned
+```
+
+<a name="continuous-integration"></a>
+
+### 2.9. Continuous integration
+
+Continuous integration, or CI as it’s often known, is the practice of having everyone working on the same software project share their changes to the codebase regularly and then checking that the code still works as it should after each change. Continuous integration forms a key part of the DevOps approach to building and releasing software, which promotes collaboration, automation and short feedback cycles.
+
+The key ingredients of continuous integration are as follows:
+
+- A source or version control system containing the entire codebase, including source code files, libraries, configuration files and scripts.
+- Automated build scripts
+- Automated tests
+- Infrastructure on which to run builds and tests.
+
+#### 2.9.1. CI Server
+
+![WHAT_IS](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/CI:CD/Screen%20Shot%202022-03-04%20at%200.03.21.png)
+
+A CI server plays a key role in implementing and managing CI/CD. It serves as the glue that brings all the stages of the pipeline together by applying your business logic to coordinate automated tasks and collating and publishing feedback. In this article, we’ll look in more detail at what a CI server does and how it can help you get the most out of CI/CD.
+
+![FLOW](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/CI:CD/Screen%20Shot%202022-03-04%20at%200.03.38.png)
+
+#### 2.9.2. Travis CI
+
+Travis is a CI Server that allows you to test and deploy projects, it´s very easy to connect git repositories and start buildig our application, once we connect our repository travis start watching for new changes and when it uppload new change we get feedback through email notifications
+ 
+ 
+ ![CI_SERVERS](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/CI:CD/Screen%20Shot%202022-03-04%20at%200.10.04.png)
+ 
+<a name="scalable-image-file-upload"></a>
+
+### 2.10. Scalable Image/file upload
+
+Store files is common requirements in modern web development, and we always think about how to implement in our applications and try to avoid side effects when our application start scale, a very common approach
+in these days is AWS Buckets, is a very good option to avoid worry about scale and lot of configuration.
+
+![AWS_S3_BUCKETS](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/store-documents/images/Screen%20Shot%202022-03-04%20at%2011.56.24.png)
+
+
+### 2.11. Project
+
+Finally we apply all the concepts in this sections in a nodejs + react project, in this project you can see how we implement testing, Puppeter, Jest, AWS Connections, Travis CI, Cache with Redis, Prototype inyection, Proxys and much more, if you want to check it, please click in the link bellow, thanks for reading, see you in the next section.
+
+[Project link](https://github.com/leonelcontrerasn/mono-node-react)
+
+
+
+[Back to NodeJS advanced concepts](#nodejs-advanced-concepts)

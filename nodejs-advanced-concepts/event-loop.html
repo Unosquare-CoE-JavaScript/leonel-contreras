@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event loop</title>
+</head>
+<body>
+  <h1>
+    The event loop
+  </h1>
+  <p>
+    When we start a NodeJS program, node automatically creates one thread, and executes all our code inside
+    that single thread, inside that single thread exist the event loop, the event loop is a control structure 
+    that decides what our one thread should be doing at any given point of time, the event loop is the absolute
+    core of every node application, and any node application has only one event loop.
+  </p>
+  <h2>
+    2.1. How the event loop is executed
+  </h2>
+    - When que run our code, the first step is to be executed
+    - once the code is executed the event loop start and will executed until don´t have more things to be executed
+
+    <h2>
+      2.2. How the event loop decides to continue or not?
+    </h2>
+    <p>
+      First you need to think the event loop as a while structure and any iteration in it 
+      as a tick, in any new iteration the event loop check if is necesary to continues or not,
+      to do this the event loop ask for the next situations:
+
+      - 1. Any pending setTimeOut, setInterval or setImmediate
+      - 2. Any pending OS tasks? (server listening to port)
+      - 3. Any pending long running operations? (like fs module)
+    </p>
+    <h2>
+      2.3. What event loop do in ticks?
+    </h2>
+    <p>
+      - 1. Node looks at pendingTimers (setTimeOut, setInterval) and sees if any functions are ready to be called
+      - 2. Node looks at pending OS tasks and pending operations and calls relevant callbacks
+      - 3. Pause execution and continue when:
+        - a new pendingOSTask is done
+        - a new pending operation is donde
+        - a timer is about to complete
+      - 4. Look at pendingTimers (setImmediate)
+      - 5. Handle any 'close' events
+    </p>
+</body>
+</html>

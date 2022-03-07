@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1> Enhance node performance</h1>
+  <p>
+    when a process take to  long in response may cause event loop blocking, and this 
+    is a very seriuos problem, because that means you're blocking the entire serve unable
+    to resolve other request, but sometimes maybe we don´t have other options that do this
+    very heavy problems, and when this happend it´s to enhance the performance runing more than
+    one process, and we can doing this with one of the folling techniques:
+
+    - using nodejs in cluster mode
+    - use workers threads
+  </p>
+
+  <h2>
+    Cluster
+  </h2>
+  <p>
+    Cluster mode allows to run different instances of a NodeJS application, making possible improve
+    the speed that we usually response.
+  </p>
+  <h2>
+    How to do it?
+  </h2>
+  <p>
+    to do this, we need to use the cluster native NodeJS library, thats allow yo to create a master,
+    and children process applications, we´ll see an example:
+  </p>
+  ````javascript
+      const cluster = require('cluster')
+      const proc = require('process')
+      const express = require('express')
+
+
+      if (cluster.isPrimary) { // This is the master and will config the cluster mode
+        cluster.fork() // We create one instance or child 
+        cluster.fork() // we create the secound one
+      
+        cluster.on('exit', (worker, code, signal) => {
+          console.log(`worker ${worker.process.pid} died`);
+        })
+      } else {
+        const app = express()
+
+        app.get('/fast', (request, response) => {
+          response.send('I finished fast')
+        })
+      
+        app.listen(3000)
+        
+        console.log(`Worker ${proc.pid} started`); // with this we can know about the actual process id
+      }
+  ````
+  <h2>
+    Additional information
+  </h2>
+  <p>
+    - Avoid to config more cluster or process than the physical machine's core.
+  </p>
+  <h2>
+    PM2
+  </h2>
+  <p>
+    We already view the way to config a cluster directly in NodeJS, but doing in that way means
+    that you need to add aditional code in order to accomplish it, and do changes in you code when
+    you require diferents configurations; to avoid this problems we can use other tools specific
+    for this kind of goals, for example PM2, pm2 is a NodeJS library that allows clustering, monitoring,
+    keep alive and other productions needs.
+
+    Finally just will se some pm2 commands:
+
+    - pm2 start index.js --i 0
+    - pm2 list
+    - pm2 show 0
+    - pm2 show index
+    - pm2 monit
+    - pm2 stop 0 / pm2 stop index
+    - pm2 delete 0 / pm2 delete index
+  </p>
+</body>
+</html>

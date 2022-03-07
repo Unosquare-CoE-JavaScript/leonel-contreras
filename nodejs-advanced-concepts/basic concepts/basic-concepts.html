@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <h1>
+      Nodejs: Basic concepts
+    </h1>
+    <p>
+      In this section we will talk about the basics of nodejs, how it works,
+      how it was developed, and specifics of event loop and the releated libraries
+      like libuv.
+    </p>
+    <h2>
+      1.1. What is Node?
+    </h2>
+    <p>
+      Nodejs is an environment to run JS code, it's multi purpose that means you can build
+      web applications, batch processes, APIs, tools, and much more.
+    </p>
+    <h2>
+      1.2. How NodeJS woks?
+    </h2>
+    <p>
+      NodeJS is build in Javascript and C++, and use 2 principal elements that allows you
+      to run JS code in basically any environment (Thanks c++) V8 and libuv.
+    </p>
+    <h2> 
+      1.2.1. V8
+    </h2>
+    <p>
+      Is the JS engine (interpret and run js code) that it´s used in nodeJS, and it was build by google.
+    </p>
+    <h2>
+     1.2.2. Libuv
+    </h2>
+    <p>
+      Is used for accesing the filesystem and control some aspects around concurrency.
+    </p>
+    <h2>
+      1.3. How NodeJS run JS Code
+    </h2>
+    <p>
+      All the code that we wrote in nodejs it happend in the JS Side for example when we import a library,
+      frequenly this side just do some validation and very simple things but this side used a very interesting
+      method process.binding that links a function in the C++ side with the JS side, this likend function (c++)
+      is where things happends is here where you can find the logic to solve things, but how can interpret JS side
+      or control the async aspects or concurrency, well to do this used v8 and libuv, v8 act as intermediary allowing
+      values that are defined in JS side to be translated into the c++ equivalence, and libuv it´s use to allowed concurrency
+      and procesing construct iny c++ side.
+    </p>
+</body>
+</html>
