@@ -748,8 +748,30 @@ Puppeteer is a helper tools that allows you to implement end-to-end testing, thr
 
 ### 2.9. Continuous integration
 
+Continuous integration, or CI as it’s often known, is the practice of having everyone working on the same software project share their changes to the codebase regularly and then checking that the code still works as it should after each change. Continuous integration forms a key part of the DevOps approach to building and releasing software, which promotes collaboration, automation and short feedback cycles.
+
+The key ingredients of continuous integration are as follows:
+
+- A source or version control system containing the entire codebase, including source code files, libraries, configuration files and scripts.
+- Automated build scripts
+- Automated tests
+- Infrastructure on which to run builds and tests.
+
+#### 2.9.1. CI Server
+
+A CI server plays a key role in implementing and managing CI/CD. It serves as the glue that brings all the stages of the pipeline together by applying your business logic to coordinate automated tasks and collating and publishing feedback. In this article, we’ll look in more detail at what a CI server does and how it can help you get the most out of CI/CD.
+
+#### 2.9.2. Travis CI
+
+Travis is a CI Server that allows you to test and deploy projects, it´s very easy to connect git repositories and start buildig our application, once we connect our repository travis start watching for new changes and when it uppload new change we get feedback through email notifications
+ 
 <a name="scalable-image-file-upload"></a>
 
 ### 2.10. Scalable Image/file upload
+
+Store files is common requirements in modern web development, and we always think about how to implement in our applications and try to avoid side effects when our application start scale, a very common approach
+in these days is AWS Buckets, is a very good option to avoid worry about scale and lot of configuration.
+
+
 
 [Back to NodeJS advanced concepts](#nodejs-advanced-concepts)
