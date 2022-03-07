@@ -370,6 +370,8 @@ In this course we´ll check how NodeJS works an use this knowledge to improve th
 
 [2.10. Scalable Image/file upload](#scalable-image-file-upload)
 
+[2.11. Link to project](#project)
+
 ### 
 
 <a name='internals'></a>
@@ -655,7 +657,7 @@ when we use catching, we need to focus in the next situations:
 - How to retrieve data from caching area?
 - The life time for cache data
 
-!(caching-data)[#]
+![caching-data](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/cache/images/Screen%20Shot%202022-02-28%20at%2010.29.16.png)
 
 #### 2.7.2. Basic commands 
 
@@ -683,6 +685,8 @@ a lot of tools that help us to accomplish.
 
 A unit test is a way of testing a unit - the smallest piece of code that can be logically isolated in a system. In most programming languages, that is a function, a subroutine, a component, a method or property.
 
+![UNIT_TESTING](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/testing/images/Screen%20Shot%202022-02-28%20at%2017.05.23.png)
+
 #### 2.8.2. End to end testing
 
 End-to-end testing is a methodology used in the software development lifecycle (SDLC) to test the functionality and performance of an application under product-like circumstances and data to replicate live settings. The goal is to simulate what a real user scenario looks like from start to finish.
@@ -690,6 +694,9 @@ End-to-end testing is a methodology used in the software development lifecycle (
 #### 2.8.4. Jest
 
 JavaScript Testing Framework with a focus on simplicity that works with projects using: Babel, TypeScript, Node, React, Angular, Vue, and others, allow you to use snapshots, mocks, factories, code coverage, and other tools that help us with automated testing.
+
+
+![test_flow](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/testing/images/Screen%20Shot%202022-02-28%20at%2017.06.50.png)
 
 ##### 2.8.4.1. Example using jest
 
@@ -727,6 +734,8 @@ JavaScript Testing Framework with a focus on simplicity that works with projects
 
 Puppeteer is a helper tools that allows you to implement end-to-end testing, through browser instance, allow you to use page acctions like open new windows, clicks, dom-selector, and also http request, it´s a powerfull tool that simulate all the user interection within browser.
 
+![Puppeteer](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/testing/images/Screen%20Shot%202022-03-01%20at%2010.34.18.png)
+
 ##### 2.8.5.1. Basic commands
 
 ```javascript
@@ -759,11 +768,18 @@ The key ingredients of continuous integration are as follows:
 
 #### 2.9.1. CI Server
 
+![WHAT_IS](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/CI:CD/Screen%20Shot%202022-03-04%20at%200.03.21.png)
+
 A CI server plays a key role in implementing and managing CI/CD. It serves as the glue that brings all the stages of the pipeline together by applying your business logic to coordinate automated tasks and collating and publishing feedback. In this article, we’ll look in more detail at what a CI server does and how it can help you get the most out of CI/CD.
+
+![FLOW](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/CI:CD/Screen%20Shot%202022-03-04%20at%200.03.38.png)
 
 #### 2.9.2. Travis CI
 
 Travis is a CI Server that allows you to test and deploy projects, it´s very easy to connect git repositories and start buildig our application, once we connect our repository travis start watching for new changes and when it uppload new change we get feedback through email notifications
+ 
+ 
+ ![CI_SERVERS](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/CI:CD/Screen%20Shot%202022-03-04%20at%200.10.04.png)
  
 <a name="scalable-image-file-upload"></a>
 
@@ -771,6 +787,15 @@ Travis is a CI Server that allows you to test and deploy projects, it´s very ea
 
 Store files is common requirements in modern web development, and we always think about how to implement in our applications and try to avoid side effects when our application start scale, a very common approach
 in these days is AWS Buckets, is a very good option to avoid worry about scale and lot of configuration.
+
+![AWS_S3_BUCKETS](https://github.com/Unosquare-CoE-JavaScript/leonel-contreras/blob/node-advance-concep/nodejs-advanced-concepts/store-documents/images/Screen%20Shot%202022-03-04%20at%2011.56.24.png)
+
+
+### 2.11. Project
+
+Finally we apply all the concepts in this sections in a nodejs + react project, in this project you can see how we implement testing, Puppeter, Jest, AWS Connections, Travis CI, Cache with Redis, Prototype inyection, Proxys and much more, if you want to check it, please click in the link bellow, thanks for reading, see you in the next section.
+
+[Project link](https://github.com/leonelcontrerasn/mono-node-react)
 
 
 
