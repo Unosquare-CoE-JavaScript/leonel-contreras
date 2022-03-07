@@ -659,14 +659,13 @@ when we use catching, we need to focus in the next situations:
 
 #### 2.7.2. Basic commands 
 
-- 
 ```javascript
   redis.createClient('redis://127.0.0.1:6379') // connection to default server
   
   client.get(key) // Get element
   client.hget(rootKet, childKey) // root parent
 
-  client.hset(key, value) // Store element
+  client.set(key, value) // Store element
   client.hset(key, value, 'EX', 10) // Store with time expiration
   
   // Store root parent with time expiration
@@ -677,19 +676,73 @@ when we use catching, we need to focus in the next situations:
 
 ### 2.8. Automated handless browser testing
 
+Testing is one of the pillars of software development, without it, we could ensure a minimum grade of quality, but in some cases it colud be a complex task when team and softwere grows, hower we could use
+a lot of tools that help us to accomplish.
+
 #### 2.8.1. Unit testing
+
+A unit test is a way of testing a unit - the smallest piece of code that can be logically isolated in a system. In most programming languages, that is a function, a subroutine, a component, a method or property.
 
 #### 2.8.2. End to end testing
 
-#### 2.8.3. Functional testing
+End-to-end testing is a methodology used in the software development lifecycle (SDLC) to test the functionality and performance of an application under product-like circumstances and data to replicate live settings. The goal is to simulate what a real user scenario looks like from start to finish.
 
 #### 2.8.4. Jest
 
-##### 2.8.4.1. Basic commands
+JavaScript Testing Framework with a focus on simplicity that works with projects using: Babel, TypeScript, Node, React, Angular, Vue, and others, allow you to use snapshots, mocks, factories, code coverage, and other tools that help us with automated testing.
+
+##### 2.8.4.1. Example using jest
+
+
+````javascript
+  beforeEach(() => { // We define some activities before start testing
+    console.log('Hi')
+  })
+
+  define('Serie of releated tests', () => { // Define a test suite
+    cosole.log('I will start working')
+
+    test('First test', () => { // a test
+      console.log('working 1')
+      expect(1).toEqual(1) // assertion
+    })
+
+    test('Secound test', () => {  // a test
+      console.log('working 2')
+      expect('A').toBe('A') // assertion
+    })
+
+    test('Third test', () => { // a test
+      console.log('working 3')
+      expect({value: 1}).toEqual({value: 1}) // aseertion
+    })
+  })
+  
+  afterAll(() => { // Final activities before finish the entire flow
+    console.log('Bye') 
+  })
+````
 
 #### 2.8.5. Puppeteer
 
+Puppeteer is a helper tools that allows you to implement end-to-end testing, through browser instance, allow you to use page acctions like open new windows, clicks, dom-selector, and also http request, it´s a powerfull tool that simulate all the user interection within browser.
+
 ##### 2.8.5.1. Basic commands
+
+```javascript
+  const puppeteer = require('puppeteer')
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox']
+  })
+
+  const page = await browser.newPage() // Open new page
+  await page.goto('http://localhost:3000') // Load a web page
+  await page.click('a.btn-floating') // click element in the page
+  await this.page.waitFor('a[href="/auth/logout"]') // wait for element to be render
+  await this.page.$eval(selector, el => el.innerHTML) // dom selecction and innerHTML returned
+```
 
 <a name="continuous-integration"></a>
 
